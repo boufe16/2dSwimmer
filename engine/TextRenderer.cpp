@@ -70,7 +70,7 @@ TextRenderer::TextRenderer(int windowWidth, int windowHeight)
 	FT_Done_FreeType(ft);
 
 	//set the shader
-	textShader = Shader("textShader.vert", "textShader.frag");
+	textShader = Shader("Shaders/textShader.vert", "Shaders/textShader.frag");
 	// set a projection matrix to be the size of the window
 	//the shader will not make use of any perspective, orthogonal for text
 	glm::mat4 projection = glm::ortho(0.0f, sWidth, 0.0f, sHeight);

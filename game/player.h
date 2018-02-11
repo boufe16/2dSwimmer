@@ -1,6 +1,6 @@
 #pragma once
-#include "sprite.h"
-#include "GameObject.h"
+#include "../engine/sprite.h"
+#include "../engine/GameObject.h"
 #include <glm.hpp>
 #include <math.h>
 class player : public GameObject

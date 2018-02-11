@@ -126,56 +126,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="background.cpp" />
     <ClCompile Include="C:\opengl-wrappers\glad\src\glad.c" />
-    <ClCompile Include="enemy.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="hitBox.cpp" />
+    <ClCompile Include="engine\GameObject.cpp" />
+    <ClCompile Include="engine\hitBox.cpp" />
+    <ClCompile Include="engine\shader.cpp" />
+    <ClCompile Include="engine\sprite.cpp" />
+    <ClCompile Include="engine\SpriteAnimation.cpp" />
+    <ClCompile Include="engine\stb_image.cpp" />
+    <ClCompile Include="engine\TextRenderer.cpp" />
+    <ClCompile Include="engine\UIElement.cpp" />
+    <ClCompile Include="game\background.cpp" />
+    <ClCompile Include="game\enemy.cpp" />
+    <ClCompile Include="game\player.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="player.cpp" />
-    <ClCompile Include="shader.cpp" />
-    <ClCompile Include="sprite.cpp" />
-    <ClCompile Include="SpriteAnimation.cpp" />
-    <ClCompile Include="stb_image.cpp" />
-    <ClCompile Include="TextRenderer.cpp" />
-    <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="boringImageShader.frag" />
-    <None Include="boringImageShader.vert" />
-    <None Include="personShader.frag" />
-    <None Include="personShader.vert" />
-    <None Include="textShader.frag" />
-    <None Include="textShader.vert" />
+    <ClInclude Include="engine\GameObject.h" />
+    <ClInclude Include="engine\hitBox.h" />
+    <ClInclude Include="engine\shader.h" />
+    <ClInclude Include="engine\sprite.h" />
+    <ClInclude Include="engine\SpriteAnimation.h" />
+    <ClInclude Include="engine\stb_image.h" />
+    <ClInclude Include="engine\TextRenderer.h" />
+    <ClInclude Include="engine\UIElement.h" />
+    <ClInclude Include="game\background.h" />
+    <ClInclude Include="game\enemy.h" />
+    <ClInclude Include="game\player.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="background.h" />
-    <ClInclude Include="enemy.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="hitBox.h" />
-    <ClInclude Include="player.h" />
-    <ClInclude Include="shader.h" />
-    <ClInclude Include="sprite.h" />
-    <ClInclude Include="SpriteAnimation.h" />
-    <ClInclude Include="stb_image.h" />
-    <ClInclude Include="TextRenderer.h" />
-    <ClInclude Include="UIElement.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="X:\Assets\babySpriteSheet.png" />
-    <Image Include="X:\Assets\background_sky.png" />
-    <Image Include="X:\Assets\basic_animation.png" />
-    <Image Include="X:\Assets\buoy8bit.png" />
-    <Image Include="X:\Assets\heartSprite.png" />
-    <Image Include="X:\Assets\swimmingBaby.png" />
-    <Image Include="X:\Assets\water1.png" />
-    <Image Include="X:\Assets\water2.png" />
-    <Image Include="X:\Assets\water3.png" />
-    <Image Include="X:\Game Assets\buoy.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Media Include="Footsteps.wav" />
-    <Media Include="sevenptone.wav" />
+    <None Include="Shaders\boringImageShader.frag" />
+    <None Include="Shaders\boringImageShader.vert" />
+    <None Include="Shaders\personShader.frag" />
+    <None Include="Shaders\personShader.vert" />
+    <None Include="Shaders\textShader.frag" />
+    <None Include="Shaders\textShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

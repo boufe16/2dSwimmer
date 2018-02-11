@@ -1,6 +1,6 @@
 #pragma once
-#include "GameObject.h"
-#include "sprite.h"
+#include "../engine/GameObject.h"
+#include "../engine/sprite.h"
 class background :public GameObject
 {
 public:

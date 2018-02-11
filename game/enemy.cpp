@@ -4,7 +4,7 @@
 
 enemy::enemy():GameObject()
 {
-	this->sprite = Sprite("X:/Assets/buoy.png", "boringImageShader.vert", "boringImageShader.frag", false);
+	this->sprite = Sprite("X:/Assets/buoy.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag", false);
 	//top part
 	this->addHitBox(glm::vec2(24.0f, 0.0f), glm::vec2(14.0f, 48.0f));
 	//liferaft part

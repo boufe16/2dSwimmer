@@ -2,7 +2,7 @@
 
 //calls the Game object constructor with these values :: 
 player::player() :GameObject(glm::vec2(100, 300), glm::vec2(64, 64), glm::vec2(0, 0), 0) {
-	this->sprite = Sprite("X:/Assets/babySpriteSheet.png", "personShader.vert", "personShader.frag",false);
+	this->sprite = Sprite("X:/Assets/babySpriteSheet.png", "Shaders/personShader.vert", "Shaders/personShader.frag",false);
 	//set the swimming animation 8 frames, 64 px jumps, 1 line 
 	SpriteAnimation swim = SpriteAnimation(); 
 	swim.animationDuration = 1; //1 sec duration

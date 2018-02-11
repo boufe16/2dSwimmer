@@ -2,18 +2,21 @@
 #include <GLFW\glfw3.h>
 #include <iostream> 
 #include <string>
-#include "sprite.h"
-#include "player.h"
+#include "engine/sprite.h"
+#include "game/player.h"
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
-#include "enemy.h"
+#include "game/enemy.h"
 #include <vector>
 #include <sstream>
 #include <iomanip>
-#include "UIElement.h"
-#include "background.h"
-#include "TextRenderer.h"
+#include "engine/UIElement.h"
+#include "game/background.h"
+#include "engine/TextRenderer.h"
+#include <al.h>
+#include <alc.h>
+#include <alut.h>
 
 #define _W 800
 #define _H 800
@@ -59,7 +62,123 @@ int main() {
 	glViewport(0,0,_W,_H);
 	glm::mat4 projection = glm::ortho(0.0f, (float)_W, (float)_H, 0.0f, -1.0f, 1.0f);
 	
-	
+	/******* START AUDIO **********/
+	ALCdevice *device;
+	//sending null gives us the default device. Good enough for now 
+	device = alcOpenDevice(NULL);
+	if (!device) {
+		std::cout << "Device failed to open " << std::endl;
+	}
+
+	//check if openAL implementation supports enumeration EXT 
+	ALboolean enumeration;
+	enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
+	if (enumeration == AL_FALSE) {
+		// not suppported, just return the default object
+	}
+	else {
+		// supported
+		// I don't really care for now I just wanna use the default system, 
+		// here I would implement something that would let the user choose 
+		// what audio device to use 
+	}
+	// Open AL has an error stack of one, we sould clear and read it after every al call 
+	// the other Init Function didn't work, this one does... 
+	// for some reason I don't yet understand: 
+	alutInitWithoutContext(0, NULL);
+
+	ALCenum err;
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error !" << std::endl;
+	//create  A context 
+	ALCcontext *context;
+	context = alcCreateContext(device, NULL);
+	if (!alcMakeContextCurrent(context))
+		std::cout << "Failed to make context current" << std::endl;
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error - line 95 !" << std::endl;
+
+	// We could define a listener here but we will use the default listener for now 
+
+	// Generate a source 
+	ALuint source;
+
+	// the 1 means we create a single source 
+	alGenSources((ALuint)1, &source);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error on line 102!" << std::endl;
+
+	//set the source's basic properties 
+	alSourcef(source, AL_PITCH, 1);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error on line 107 !" << std::endl;
+
+	alSourcef(source, AL_GAIN, 1);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error on line 112 !" << std::endl;
+
+	alSource3f(source, AL_POSITION, 0, 0, 0);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error line 117!" << std::endl;
+
+	alSource3f(source, AL_VELOCITY, 0, 0, 0);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error @ line 122 !" << std::endl;
+
+	alSourcei(source, AL_LOOPING, AL_FALSE);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error @ line 127!" << std::endl;
+
+	// Generate Buffer :
+	ALuint buffer;
+	alGenBuffers((ALuint)1, &buffer);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error generating the buffer @ line 136!" << std::endl;
+
+	//openAl does WAVE only, I'll use alut but might swap to libaudio ? 
+	buffer = alutCreateBufferFromFile("Assets/Audio/Footsteps.wav");
+	err = alutGetError();
+	if (err != ALUT_ERROR_NO_ERROR)
+		std::cout << alutGetErrorString(err) << std::endl;
+
+	alSourcei(source, AL_BUFFER, buffer);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << alGetString(err) << std::endl;
+
+	//spawns a thread to play audio 
+	alSourcePlay(source);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << alGetString(err) << std::endl;
+
+	ALint source_state;
+	alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << alGetString(err) << std::endl;
+	//loop while the source is playing. 
+	while (source_state == AL_PLAYING)
+		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+
+	//cleanup code : note, this kills the sound. 
+	alDeleteSources(1, &source);
+	alDeleteBuffers(1, &buffer);
+	device = alcGetContextsDevice(context);
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(context);
+	alcCloseDevice(device);
+
+	/******** END AUDIO ***********/
 	
 	TextRenderer textRenderer(_W, _H);
 	//set callback 
@@ -87,31 +206,31 @@ int main() {
 	std::vector<background> rearBG;
 	background * bg;
 	//static
-	bg = new background("X:/Assets/background_sky.png", "boringImageShader.vert", "boringImageShader.frag",0);
+	bg = new background("X:/Assets/background_sky.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag",0);
 	bg->size = glm::vec2(_W, _H);
 	rearBG.push_back(background(*bg));
 
-	bg = new background("X:/Assets/water1.png", "boringImageShader.vert", "boringImageShader.frag", 50);
+	bg = new background("X:/Assets/water1.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag", 50);
 	bg->size = glm::vec2(_W, _H);
 	rearBG.push_back(background(*bg));
-	bg = new background("X:/Assets/water1.png", "boringImageShader.vert", "boringImageShader.frag", 50);
+	bg = new background("X:/Assets/water1.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag", 50);
 	bg->size = glm::vec2( _W, _H);
 	bg->pos = glm::vec2(_W , 0);
 	rearBG.push_back(background(*bg));
 
-	bg = new background("X:/Assets/water2.png", "boringImageShader.vert", "boringImageShader.frag", 25);
+	bg = new background("X:/Assets/water2.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag", 25);
 	bg->size = glm::vec2(_W, _H);
 	rearBG.push_back(background(*bg));
-	bg = new background("X:/Assets/water2.png", "boringImageShader.vert", "boringImageShader.frag", 25);
+	bg = new background("X:/Assets/water2.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag", 25);
 	bg->size = glm::vec2(_W,_H);
 	bg->pos = glm::vec2(_W , 0);
 	rearBG.push_back(background(*bg));
 	//wallpapers above the sprite 
 	std::vector<background> frontBG;
-	bg = new background("X:/Assets/water3.png", "boringImageShader.vert", "boringImageShader.frag", 75);
+	bg = new background("X:/Assets/water3.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag", 75);
 	bg->size = glm::vec2(_W, _H);
 	frontBG.push_back(background(*bg));
-	bg = new background("X:/Assets/water3.png", "boringImageShader.vert", "boringImageShader.frag", 75);
+	bg = new background("X:/Assets/water3.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag", 75);
 	bg->size = glm::vec2(_W, _H);
 	bg->pos = glm::vec2(_W , 0);
 
@@ -123,7 +242,7 @@ int main() {
 	//game score 
 	int score = 0;
 	GameState gameState = Game; 
-	UIElement hearts("X:/Assets/heartSprite.png", "boringImageShader.vert", "boringImageShader.frag");
+	UIElement hearts("X:/Assets/heartSprite.png", "Shaders/boringImageShader.vert", "Shaders/boringImageShader.frag");
 	hearts.size = glm::vec2(32, 32);
 	//buoy.myShader.setMat4("transform", buoyTrans);
 	//buffer stuff 

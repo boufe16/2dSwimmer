@@ -1,1 +1,5 @@
-﻿  2DRunner.vcxproj -> X:\Projects\Game\2DSwim\Debug\2DRunner.exe
+﻿  TextRenderer.cpp
+x:\projects\game\2dswim\2drunner\engine\textrenderer.cpp(8): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+x:\projects\game\2dswim\2drunner\engine\textrenderer.cpp(9): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+x:\projects\game\2dswim\2drunner\engine\textrenderer.cpp(63): warning C4838: conversion from 'unsigned int' to 'GLint' requires a narrowing conversion
+  2DRunner.vcxproj -> X:\Projects\Game\2DSwim\Debug\2DRunner.exe
