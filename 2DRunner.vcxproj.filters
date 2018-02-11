@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\engine">
+      <UniqueIdentifier>{2854c804-fc8b-4b3c-9045-e9a458062152}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{421d0ad3-3c39-4717-bbe7-bcf005d08873}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\shaders">
+      <UniqueIdentifier>{714a3aff-74b2-4d7f-9862-5344324687bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine">
+      <UniqueIdentifier>{942a5f14-b645-4550-8e5c-f1c19ce9e06a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{ed9f8d83-7c29-415d-a1de-4dc7d86c750c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="background.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="hitBox.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimation.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\opengl-wrappers\glad\src\glad.c">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="personShader.vert">
+      <Filter>Source Files\game\shaders</Filter>
+    </None>
+    <None Include="personShader.frag">
+      <Filter>Source Files\game\shaders</Filter>
+    </None>
+    <None Include="boringImageShader.vert">
+      <Filter>Source Files\game\shaders</Filter>
+    </None>
+    <None Include="boringImageShader.frag">
+      <Filter>Source Files\game\shaders</Filter>
+    </None>
+    <None Include="textShader.vert">
+      <Filter>Source Files\game\shaders</Filter>
+    </None>
+    <None Include="textShader.frag">
+      <Filter>Source Files\game\shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="background.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="hitBox.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimation.h">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="X:\Game Assets\buoy.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\buoy8bit.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\swimmingBaby.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\heartSprite.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\background_sky.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\water1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\water2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\water3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\basic_animation.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="X:\Assets\babySpriteSheet.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Footsteps.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="sevenptone.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+  </ItemGroup>
+</Project>
