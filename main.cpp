@@ -167,17 +167,7 @@ int main() {
 	if (err != AL_NO_ERROR)
 		std::cout << alGetString(err) << std::endl;
 	//loop while the source is playing. 
-	while (source_state == AL_PLAYING)
-		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
-
-	//cleanup code : note, this kills the sound. 
-	alDeleteSources(1, &source);
-	alDeleteBuffers(1, &buffer);
-	device = alcGetContextsDevice(context);
-	alcMakeContextCurrent(NULL);
-	alcDestroyContext(context);
-	alcCloseDevice(device);
-
+	
 	/******** END AUDIO ***********/
 	
 	TextRenderer textRenderer(_W, _H);
@@ -337,14 +327,28 @@ int main() {
 		//score display :: looks really shitty right now because of the sizing/antialiasing whatever 
 		textRenderer.RenderText(std::to_string(score), (_W /2)-10, _H-64, 1.5, glm::vec3(1.0f, 1.0f, 1.0f));
 
-		//
+		//Check If any Sound memory needs to be free'd, freed , free ed ? 
+		//get new state
+		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+		//if the sound is no longer playing
+		if (source_state != AL_PLAYING) {
+			//cleanup code : note, this kills the sound. 
+			alDeleteSources(1, &source);
+			alDeleteBuffers(1, &buffer);
+		
+		}
+		//game state 
 		if (gameState == GameOver) {
 			textRenderer.RenderText("GAME OVER", 0, _H / 2 + 40, 2, glm::vec3(0, 0, 0));
 		}
 		glfwSwapBuffers(window);//swap colour buffer 
 		glfwPollEvents(); //check if events triggered (keyboard/mouse etc) 
 	}
-	
+	//close open al and exit
+	device = alcGetContextsDevice(context);
+	alcMakeContextCurrent(NULL);
+	alcDestroyContext(context);
+	alcCloseDevice(device);
 	glfwTerminate();//delete allocated resources
 	return 0; 
 }
@@ -387,24 +391,4 @@ void processInput(GLFWwindow *window, player *p ) {
 		Keys[GLFW_KEY_SPACE] = true;
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
 		Keys[GLFW_KEY_SPACE] = false; 
-	//if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS ||
-	//	glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-	//	
-	//}
-	//if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS ||
-	//	glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-	//	//p->pos.x--;
-	//}
-	//if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS || 
-	//	glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-	//	if (p->pos.y > _Water-30 && !p->isDiving) {
-	//		p->isDiving = true;
-	//		p->acceleration.y = 0;//kill existing acceleration
-	//		p->velocity.y = 100;
-	//	}
-	//}
-	//if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS ||
-	//	glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-	//	//p->pos.x++;
-	//}
 }

@@ -1,5 +1,10 @@
-﻿  TextRenderer.cpp
-x:\projects\game\2dswim\2drunner\engine\textrenderer.cpp(8): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-x:\projects\game\2dswim\2drunner\engine\textrenderer.cpp(9): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-x:\projects\game\2dswim\2drunner\engine\textrenderer.cpp(63): warning C4838: conversion from 'unsigned int' to 'GLint' requires a narrowing conversion
+﻿  main.cpp
+x:\projects\game\2dswim\2drunner\main.cpp(252): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+x:\projects\game\2dswim\2drunner\main.cpp(262): warning C4018: '<': signed/unsigned mismatch
+x:\projects\game\2dswim\2drunner\main.cpp(265): warning C4018: '<': signed/unsigned mismatch
+x:\projects\game\2dswim\2drunner\main.cpp(269): warning C4018: '<': signed/unsigned mismatch
+x:\projects\game\2dswim\2drunner\main.cpp(302): warning C4018: '<': signed/unsigned mismatch
+x:\projects\game\2dswim\2drunner\main.cpp(312): warning C4018: '<': signed/unsigned mismatch
+x:\projects\game\2dswim\2drunner\main.cpp(362): warning C4018: '<': signed/unsigned mismatch
+x:\projects\game\2dswim\2drunner\main.cpp(363): warning C4018: '<': signed/unsigned mismatch
   2DRunner.vcxproj -> X:\Projects\Game\2DSwim\Debug\2DRunner.exe
