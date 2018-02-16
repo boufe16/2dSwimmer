@@ -17,7 +17,7 @@
 #include <al.h>
 #include <alc.h>
 #include <alut.h>
-
+#include <list>
 #define _W 800
 #define _H 800
 #define _Water 480
@@ -35,6 +35,19 @@ bool collisions(GameObject &one, GameObject &two);
 enum GameState { Menu, Game, GameOver };
 //array of booleans tells us whether the key is pressed down or not
 GLboolean Keys[1024];
+
+//sound 
+unsigned int generateAudioBuffer(const char* fileName);
+void playSound(const char* fileName);
+void audioCleanerUpper();
+unsigned int addSoundSource();
+
+// this Vector Keeps track of the Source IDs that are currrently in use 
+// when we add a source, we store its ID here,
+// when the source is done playing, we'll remove the ID 
+std::list<ALuint> soundSourceIds;
+
+
 int main() {
 	//glfw will set the opengl version and greate a window 
 	glfwInit();
@@ -59,9 +72,9 @@ int main() {
 	}
 
 	//send opengl the size of the viewport 
-	glViewport(0,0,_W,_H);
+	glViewport(0, 0, _W, _H);
 	glm::mat4 projection = glm::ortho(0.0f, (float)_W, (float)_H, 0.0f, -1.0f, 1.0f);
-	
+
 	/******* START AUDIO **********/
 	ALCdevice *device;
 	//sending null gives us the default device. Good enough for now 
@@ -102,72 +115,11 @@ int main() {
 
 	// We could define a listener here but we will use the default listener for now 
 
-	// Generate a source 
-	ALuint source;
-
-	// the 1 means we create a single source 
-	alGenSources((ALuint)1, &source);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << "We have an error on line 102!" << std::endl;
-
-	//set the source's basic properties 
-	alSourcef(source, AL_PITCH, 1);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << "We have an error on line 107 !" << std::endl;
-
-	alSourcef(source, AL_GAIN, 1);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << "We have an error on line 112 !" << std::endl;
-
-	alSource3f(source, AL_POSITION, 0, 0, 0);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << "We have an error line 117!" << std::endl;
-
-	alSource3f(source, AL_VELOCITY, 0, 0, 0);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << "We have an error @ line 122 !" << std::endl;
-
-	alSourcei(source, AL_LOOPING, AL_FALSE);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << "We have an error @ line 127!" << std::endl;
-
-	// Generate Buffer :
-	ALuint buffer;
-	alGenBuffers((ALuint)1, &buffer);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << "We have an error generating the buffer @ line 136!" << std::endl;
-
-	//openAl does WAVE only, I'll use alut but might swap to libaudio ? 
-	buffer = alutCreateBufferFromFile("Assets/Audio/Footsteps.wav");
-	err = alutGetError();
-	if (err != ALUT_ERROR_NO_ERROR)
-		std::cout << alutGetErrorString(err) << std::endl;
-
-	alSourcei(source, AL_BUFFER, buffer);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << alGetString(err) << std::endl;
-
-	//spawns a thread to play audio 
-	alSourcePlay(source);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << alGetString(err) << std::endl;
-
-	ALint source_state;
-	alGetSourcei(source, AL_SOURCE_STATE, &source_state);
-	err = alGetError();
-	if (err != AL_NO_ERROR)
-		std::cout << alGetString(err) << std::endl;
-	//loop while the source is playing. 
+	// Generate a source
+	playSound("Assets/Audio/beep.wav");
+	playSound("Assets/Audio/Footsteps.wav");
 	
+
 	/******** END AUDIO ***********/
 	
 	TextRenderer textRenderer(_W, _H);
@@ -239,7 +191,7 @@ int main() {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	//turn off VSYNC
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	//to have constant experiance (logic not based on framerate etc.. ); 
 	float deltaTime = 0.0f;
@@ -327,16 +279,8 @@ int main() {
 		//score display :: looks really shitty right now because of the sizing/antialiasing whatever 
 		textRenderer.RenderText(std::to_string(score), (_W /2)-10, _H-64, 1.5, glm::vec3(1.0f, 1.0f, 1.0f));
 
-		//Check If any Sound memory needs to be free'd, freed , free ed ? 
-		//get new state
-		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
-		//if the sound is no longer playing
-		if (source_state != AL_PLAYING) {
-			//cleanup code : note, this kills the sound. 
-			alDeleteSources(1, &source);
-			alDeleteBuffers(1, &buffer);
-		
-		}
+		//cleans up the audio
+		audioCleanerUpper();
 		//game state 
 		if (gameState == GameOver) {
 			textRenderer.RenderText("GAME OVER", 0, _H / 2 + 40, 2, glm::vec3(0, 0, 0));
@@ -391,4 +335,104 @@ void processInput(GLFWwindow *window, player *p ) {
 		Keys[GLFW_KEY_SPACE] = true;
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
 		Keys[GLFW_KEY_SPACE] = false; 
+}
+
+unsigned int addSoundSource() {
+	// the 1 means we create a single source 
+	ALuint source;;
+	alGenSources((ALuint)1, &source);
+	ALCenum err;
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "error generating sources" << std::endl;
+
+	//set the source's basic properties
+	
+	alSourcef(source, AL_PITCH, 1);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "Error Setting Pitch" << std::endl;
+
+	alSourcef(source, AL_GAIN, 1);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "Error Setting Gain" << std::endl;
+
+	alSource3f(source, AL_POSITION, 0, 0, 0);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "Error Setting OpenAl source position" << std::endl;
+
+	alSource3f(source, AL_VELOCITY, 0, 0, 0);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "Error setting OpenAl source Velocity" << std::endl;
+
+	alSourcei(source, AL_LOOPING, AL_FALSE);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "error setting OpenAl source Looping" << std::endl;
+	
+	//this unsigned int is the open-al ID of the sound source, 
+	//we add this ID to the bank of Sounds 
+	//we will then remove it when the source is done playing
+	return source;
+}
+
+//basically i want to be able to call playSound and have the sound play (novel idea i know) 
+void playSound(const char* fileName) {
+
+	unsigned int source = addSoundSource();
+	soundSourceIds.push_back(source);
+	unsigned int buffer = generateAudioBuffer(fileName);
+	//assign buffer to a source
+	alSourcei(source, AL_BUFFER, buffer);
+	ALCenum err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << alGetString(err) << std::endl;
+
+	//spawns a thread to play audio 
+	alSourcePlay(source);
+	err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << alGetString(err) << std::endl;
+}
+
+unsigned int generateAudioBuffer(const char* fileName) {
+
+	// Generate Buffers
+	ALuint buffer;
+	alGenBuffers((ALuint)1, &buffer);
+	ALCenum err = alGetError();
+	if (err != AL_NO_ERROR)
+		std::cout << "We have an error generating the buffer @ line 136!" << std::endl;
+
+	//openAl does WAVE only, I'll use alut but might swap to libaudio ? 
+	buffer = alutCreateBufferFromFile(fileName);
+	err = alutGetError();
+	if (err != ALUT_ERROR_NO_ERROR)
+		std::cout << alutGetErrorString(err) << std::endl;
+
+	return buffer; 
+}
+
+void audioCleanerUpper() {
+
+	ALint source_state;
+	//Check If any Sound memory needs to be free'd, freed , free ed ? 
+	//get new state
+	std::list<ALuint>::iterator it = soundSourceIds.begin();
+	while (it!= soundSourceIds.end())
+	{
+		alGetSourcei(*it, AL_SOURCE_STATE, &source_state);
+		//if the sound is no longer playing
+		if (source_state != AL_PLAYING) {
+			// delete the source
+			alDeleteSources(1, &*it);
+			// remove the int from the list
+			it = soundSourceIds.erase(it);
+		}
+		else
+			it++;
+	}
 }
